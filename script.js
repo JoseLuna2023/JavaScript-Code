@@ -8,14 +8,14 @@ const btn1 = document.querySelector(".btn1");
 const btn2 = document.querySelector(".btn2");
 const btn3 = document.querySelector(".btn3");
 const btn4 = document.querySelector(".btn4");
-const quizOver = document.querySelector(".quizOver");
+const endPage = document.querySelector(".endPage");
 const score = document.querySelector(".score");
 const initialsInput = document.querySelector(".initialsInput");
 const submitBtn = document.querySelector(".submitBtn");
 
-let scoreValue = 0
-let time = 60
-let quizIndex = 0
+let scoreValue = 0;
+let time = 60;
+let quizIndex = 0;
 
 const quizArr = [
     {
@@ -26,7 +26,7 @@ const quizArr = [
     {
         question: "What does a variable look like in JavaScript?",
         choices: ["A. function()", "B. var", "C. variable", "D. type"],
-        correctChoice: ""
+        correctChoice: "B. var"
     },
     //     {
     // question: "",
@@ -46,12 +46,22 @@ const quizArr = [
 ]
 
 quizPage.style.display = "none"
-quizOver.style.display = "none"
+endPage.style.display = "none"
 
 startBtn.addEventListener("click", function () {
     starterPage.style.display = "none"
     quizPage.style.display = "block"
     showQuestions(quizIndex)
+    setInterval(function() {
+        if(time <= 0) {
+            quizOver()
+            timer.innerHTML = "Times up!"
+            clearInterval()
+        } else {
+            time--
+            timer.innerHTML = "Time left: " + time
+        }
+    }, 1000)
 })
 
 function showQuestions(quizIndex) {
@@ -76,7 +86,7 @@ btn1.addEventListener("click", function () {
     }
     quizIndex++
     if (quizIndex >= quizArr.length) {
-        console.log("Quiz Over!")
+        quizOver()
         quizIndex = 0
     }
     showQuestions(quizIndex)
@@ -90,7 +100,7 @@ btn2.addEventListener("click", function () {
     }
     quizIndex++
     if (quizIndex >= quizArr.length) {
-        console.log("Quiz Over!")
+        quizOver()
         quizIndex = 0
     }
     showQuestions(quizIndex)
@@ -104,7 +114,7 @@ btn3.addEventListener("click", function () {
     }
     quizIndex++
     if (quizIndex >= quizArr.length) {
-        console.log("Quiz Over!")
+        quizOver()
         quizIndex = 0
     }
     showQuestions(quizIndex)
@@ -118,9 +128,24 @@ btn4.addEventListener("click", function () {
     }
     quizIndex++
     if (quizIndex >= quizArr.length) {
-        console.log("Quiz Over!")
+        quizOver()
         quizIndex = 0
     }
     showQuestions(quizIndex)
+})
+
+function quizOver() {
+    quizPage.style.display = "none"
+    endPage.style.display = "block"
+    score.innerHTML = "You got a score of: " + scoreValue
+}
+
+submitBtn.addEventListener("click", function() {
+    var initials = initialsInput.value
+    var data = {
+        initials,
+        scoreValue
+    }
+    localStorage.setItem("score", JSON.stringify(data))
 })
 
